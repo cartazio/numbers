@@ -1,10 +1,11 @@
-Name:       numbers
-Version:    3000.0.0.0
-License:    BSD3
-Author:     Lennart Augustsson
-Maintainer: Lennart Augustsson
-Category:   Data, Math
-Synopsis:   Various number types
+Name:           numbers
+Version:        3000.0.0.0
+License:        BSD3
+License-file:   LICENSE
+Author:         Lennart Augustsson
+Maintainer:     Lennart Augustsson
+Category:       Data, Math
+Synopsis:       Various number types
 Description:
   Instances of the numerical classes for a variety of
   different numbers: (computable) real numbers,
@@ -12,9 +13,9 @@ Description:
   arbitrary precision floating point numbers,
   differentiable numbers, symbolic numbers,
   natural numbers, interval arithmetic.
-Build-type:	Simple
+Build-type:	    Simple
 
-cabal-version:      >= 1.2
+cabal-version:  >= 1.8
 
 homepage:   https://github.com/DanBurton/numbers
 source-repository head
