@@ -36,13 +36,13 @@ dCon x = C x
 -- |The 'dVar' function turns a number into a variable
 -- number.  This is the number with with respect to which
 -- the derivaticve is computed.
-dVar :: (Num a) => a -> Dif a
+dVar :: (Num a, Eq a) => a -> Dif a
 dVar x = D x 1
 
 -- |The 'df' takes a 'Dif' number and returns its first
 -- derivative.  The function can be iterated to to get
 -- higher derivaties.
-df :: (Num a) => Dif a -> Dif a
+df :: (Num a, Eq a) => Dif a -> Dif a
 df (D _ x') = x'
 df (C _   ) = 0
 
@@ -64,11 +64,11 @@ mkDif = D
 -- 
 -- >  deriv f = val . df . f . dVar
 -- 
-deriv :: (Num a, Num b) => (Dif a -> Dif b) -> (a -> b)
+deriv :: (Num a, Num b, Eq a, Eq b) => (Dif a -> Dif b) -> (a -> b)
 deriv f = val . df . f . dVar
 
 -- |Convert a 'Dif' function to an ordinary function.
-unDif :: (Num a) => (Dif a -> Dif b) -> (a -> b)
+unDif :: (Num a, Eq a) => (Dif a -> Dif b) -> (a -> b)
 unDif f = val . f . dVar
 
 instance (Show a) => Show (Dif a) where
@@ -83,7 +83,7 @@ instance (Eq a) => Eq (Dif a) where
 instance (Ord a) => Ord (Dif a) where
     x `compare` y  =  val x `compare` val y
 
-instance (Num a) => Num (Dif a) where
+instance (Num a, Eq a) => Num (Dif a) where
     (C x)    + (C y)         =  C (x + y)
     (C x)    + (D y y')      =  D (x + y) y'
     (D x x') + (C y)         =  D (x + y) x'
@@ -115,18 +115,18 @@ instance (Num a) => Num (Dif a) where
     signum (C x)             =  C (signum x)
     signum (D x _)           =  C (signum x)
 
-instance (Fractional a) => Fractional (Dif a) where
+instance (Fractional a, Eq a) => Fractional (Dif a) where
     recip (C x)    = C (recip x)
     recip (D x x') = ip
 	where ip = D (recip x) (-x' * ip * ip)
     fromRational r = C (fromRational r)
 
-lift :: (Num a) => [a -> a] -> Dif a -> Dif a
+lift :: (Num a, Eq a) => [a -> a] -> Dif a -> Dif a
 lift (f : _) (C x) = C (f x)
 lift (f : f') p@(D x x') = D (f x) (x' * lift f' p)
 lift _ _ = error "lift"
 
-instance (Floating a) => Floating (Dif a) where
+instance (Floating a, Eq a) => Floating (Dif a) where
     pi               = C pi
 
     exp (C x)        = C (exp x)

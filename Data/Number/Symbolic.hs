@@ -33,7 +33,7 @@ con = Con
 
 -- | The expression @subst x v e@ substitutes the expression @v@ for each
 -- occurence of the variable @x@ in @e@.
-subst :: (Num a) => String -> Sym a -> Sym a -> Sym a
+subst :: (Num a, Eq a) => String -> Sym a -> Sym a -> Sym a
 subst _ _ e@(Con _) = e
 subst x v e@(App x' _ []) | x == x' = v
       	                  | otherwise = e
@@ -65,7 +65,7 @@ instance (Show a) => Show (Sym a) where
     showsPrec p (App f _ xs) =
         showParen (p>10) (foldl (.) (showString f) (map (\ x -> showChar ' ' . showsPrec 11 x) xs))
 
-instance (Num a) => Num (Sym a) where
+instance (Num a, Eq a) => Num (Sym a) where
     x + y         = binOp (+) x "+" y
     x - y         = binOp (-) x "-" y
     x * y         = binOp (*) x "*" y
@@ -74,12 +74,12 @@ instance (Num a) => Num (Sym a) where
     signum x      = unOp signum "signum" x
     fromInteger x = Con (fromInteger x)
 
-instance (Fractional a) => Fractional (Sym a) where
+instance (Fractional a, Eq a) => Fractional (Sym a) where
     x / y          = binOp (/) x "/" y
     fromRational x = Con (fromRational x)
 
 -- Assume the numbers are a field and simplify a little
-binOp :: (Num a) => (a->a->a) -> Sym a -> String -> Sym a -> Sym a
+binOp :: (Num a, Eq a) => (a->a->a) -> Sym a -> String -> Sym a -> Sym a
 binOp f (Con x) _ (Con y) = Con (f x y)
 binOp _ x "+" 0 = x
 binOp _ 0 "+" x = x
@@ -141,7 +141,7 @@ instance (Real a) => Real (Sym a) where
 instance (RealFrac a) => RealFrac (Sym a) where
     properFraction (Con c) = (i, Con c') where (i, c') = properFraction c
 
-instance (Floating a) => Floating (Sym a) where
+instance (Floating a, Eq a) => Floating (Sym a) where
     pi = var "pi"
     exp = unOp exp "exp"
     sqrt = unOp sqrt "sqrt"
@@ -161,7 +161,7 @@ instance (Floating a) => Floating (Sym a) where
     atanh = unOp atanh "atanh"
     acosh = unOp acosh "acosh"
 
-instance (RealFloat a) => RealFloat (Sym a) where
+instance (RealFloat a, Show a) => RealFloat (Sym a) where
     floatRadix = floatRadix . unSym
     floatDigits = floatDigits . unSym
     floatRange  = floatRange . unSym
