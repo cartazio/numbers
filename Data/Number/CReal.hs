@@ -1,4 +1,3 @@
-{- OPTIONS -fglasgow-exts -}
 -- ERA: Exact Real Arithmetic (version 1.0)
 --
 -- A tolerably efficient and possibly correct implementation of the computable
