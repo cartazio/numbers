@@ -6,8 +6,12 @@
 module Data.Number.BigFloat(
     BigFloat,
     Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
+    bigfloat_properties
     ) where
 import Numeric(showSigned)
+import Test.Framework (Test, testGroup)
+import Test.Framework.Providers.QuickCheck2 (testProperty)
+import Test.QuickCheck (Arbitrary(..), Gen, Property, (==>))
 
 import Data.Number.Fixed
 import qualified Data.Number.FixedFunctions as F
@@ -105,3 +109,25 @@ toFloat1 :: (Epsilon e) => (Rational -> Rational -> Rational) ->
 toFloat1 f x@(BF m e) =
     fromRational $ f (precision m * scl) (toRational m * scl)
       where scl = base^^e
+
+
+
+-- * Quickcheck Properties
+
+prop_bigfloat_double_agree :: Double -> Bool
+prop_bigfloat_double_agree dbl =
+  dbl == bf'
+  where
+    -- Convert dbl to a BigFloat.
+    bf = fromReal dbl :: BigFloat Prec50
+    -- And convert it back.
+    bf' = fromReal bf :: Double
+
+    fromReal :: (RealFrac a, Fractional b) => a -> b
+    fromReal = fromRational . toRational
+
+bigfloat_properties :: Test.Framework.Test
+bigfloat_properties =
+  testGroup "BigFloat Properties" [
+    testProperty "bigfloat/double agree " prop_bigfloat_double_agree
+  ]
