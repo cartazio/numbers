@@ -44,8 +44,10 @@ instance (Epsilon e) => Real (BigFloat e) where
 instance (Epsilon e) => Fractional (BigFloat e) where
     recip (BF m e) = bf (base / m) (-(e + 1))
     -- Take care not to lose precision for small numbers
-    fromRational x = if abs x < 1 then recip $ bf (fromRational (recip x)) 0
-    		     	      	  else bf (fromRational x) 0
+    fromRational x
+      | x == 0 || abs x >= 1 = bf (fromRational x) 0
+      | otherwise = recip $ bf (fromRational (recip x)) 0
+
 
 -- normalizing constructor
 -- XXX The scaling is very inefficient
