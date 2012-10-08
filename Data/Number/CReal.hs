@@ -144,7 +144,7 @@ power_series ps terms (CR x')
                   xr = x' p'; xn = 2^p'; g yn = round_uk ((yn*xr) % (2^p'))
                in round_uk (accumulate (iterate g xn) (take t ps) % (2^l2t)))
     where accumulate _      []     = 0
-	  accumulate []     _      = error "CReal.power_series.accumulate"
+          accumulate []     _      = error "CReal.power_series.accumulate"
           accumulate (x:xs) (c:cs) = let t = round_uk (c*(x % 1)) in
                                      if t == 0 then 0 else t + accumulate xs cs
 
@@ -169,8 +169,8 @@ instance Enum CReal where
   enumFromTo n e   = takeWhile (<= e) $ iterate (+ 1)n
   enumFromThen n m = iterate (+(m-n)) n
   enumFromThenTo n m e = if m >= n then takeWhile (<= e) $ iterate (+(m-n)) n
-			 else takeWhile (>= e) $ iterate (+(m-n)) n
-  
+                          else takeWhile (>= e) $ iterate (+(m-n)) n
+
 instance Real CReal where
  -- toRational x@(CR x') = x' n % 2^n where n = digitsToBits digits
   toRational _ = error "CReal.toRational"
@@ -206,8 +206,8 @@ showCReal d (CR x')
           (s,ds') = let sgn = head ds == '-' in (sgn, if sgn then tail ds else ds)
           ds'' = take (max (d+1-length ds') 0) (repeat '0') ++ ds'
           (zs,fs) = splitAt (length ds'' -d) ds''
-	  fs' = case reverse $ dropWhile (== '0') $ reverse fs of
-	        "" -> "0"
+          fs' = case reverse $ dropWhile (== '0') $ reverse fs of
+                "" -> "0"
                 xs -> xs
 
 digitsToBits :: Int -> Int
