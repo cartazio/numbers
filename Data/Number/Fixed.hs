@@ -1,4 +1,5 @@
 {-# LANGUAGE
+    EmptyDataDecls,
     GeneralizedNewtypeDeriving,
     ScopedTypeVariables,
     Rank2Types #-}
