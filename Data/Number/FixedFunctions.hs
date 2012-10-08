@@ -139,6 +139,8 @@ approxCF eps x
                         f1 = u1/v1
 
 
+-- Type signature determined by GHC.
+fromTaylorToCF :: Fractional a => [a] -> a -> [(a, a)]
 fromTaylorToCF s x =
         --
         -- Convert infinite number of terms of Taylor expansion of
