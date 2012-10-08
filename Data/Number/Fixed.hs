@@ -141,6 +141,13 @@ instance (Epsilon e) => RealFloat (Fixed e) where
     isDenormalized _ = False
     isNegativeZero _ = False
     isIEEE _ = False
+    -- Explicitly undefine these rather than omitting them; this
+    -- prevents a compiler warning at least.
+    floatRadix = undefined
+    floatDigits = undefined
+    floatRange = undefined
+    decodeFloat = undefined
+    encodeFloat = undefined
 
 -----------
 
