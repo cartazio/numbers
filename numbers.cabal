@@ -41,6 +41,13 @@ Library
     Data.Number.Natural
   Other-modules:    Data.Number.Vectorspace Data.Number.FixedFunctions
 
+  Ghc-Options:
+    -fwarn-missing-signatures
+    -fwarn-orphans
+    -fwarn-tabs
+    -fwarn-incomplete-record-updates
+    -fwarn-monomorphism-restriction
+
 test-suite testsuite
   type: exitcode-stdio-1.0
   hs-source-dirs: . test
