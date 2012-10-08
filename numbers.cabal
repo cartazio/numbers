@@ -27,7 +27,13 @@ source-repository this
   tag:      numbers-3000.0.0.0
 
 Library
-  Build-Depends:    base >= 3 && < 5
+  Build-Depends:
+    base >= 3 && < 5,
+    -- Additional test dependencies.
+    QuickCheck                  == 2.*,
+    test-framework              == 0.6.*,
+    test-framework-quickcheck2  == 0.2.*
+
   Exposed-modules:
     Data.Number.Symbolic Data.Number.Dif
     Data.Number.CReal Data.Number.Fixed
@@ -35,3 +41,20 @@ Library
     Data.Number.Natural
   Other-modules:    Data.Number.Vectorspace Data.Number.FixedFunctions
 
+  Ghc-Options:
+    -fwarn-missing-signatures
+    -fwarn-orphans
+    -fwarn-tabs
+    -fwarn-incomplete-record-updates
+    -fwarn-monomorphism-restriction
+
+test-suite testsuite
+  type: exitcode-stdio-1.0
+  hs-source-dirs: . test
+  main-is: TestSuite.hs
+  build-depends:
+    base                        >= 3 && < 5,
+    -- Additional test dependencies.
+    QuickCheck                  == 2.*,
+    test-framework              == 0.6.*,
+    test-framework-quickcheck2  == 0.2.*

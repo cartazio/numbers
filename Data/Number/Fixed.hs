@@ -1,4 +1,9 @@
-{-# OPTIONS_GHC -fglasgow-exts -fscoped-type-variables #-}
+{-# LANGUAGE
+    EmptyDataDecls,
+    GeneralizedNewtypeDeriving,
+    ScopedTypeVariables,
+    Rank2Types #-}
+
 -- | Numbers with a fixed number of decimals.
 module Data.Number.Fixed(
     Fixed,
@@ -24,7 +29,7 @@ data EpsDiv10 p
 instance (Epsilon e) => Epsilon (EpsDiv10 e) where
     eps e = eps (un e) / 10
        where un :: EpsDiv10 e -> e
-       	     un = undefined
+             un = undefined
 
 -- | Ten decimals.
 data Prec10
@@ -46,7 +51,7 @@ data PrecPlus20 e
 instance (Epsilon e) => Epsilon (PrecPlus20 e) where
     eps e = 1e-20 * eps (un e)
        where un :: PrecPlus20 e -> e
-       	     un = undefined
+             un = undefined
 
 -----------
 
@@ -82,7 +87,7 @@ convertFixed :: (Epsilon e, Epsilon f) => Fixed e -> Fixed f
 convertFixed e@(F x) = f
   where f = F $ if feps > eeps then approx x feps else x
         feps = getEps f
-	eeps = getEps e
+        eeps = getEps e
 
 getEps :: (Epsilon e) => Fixed e -> Rational
 getEps = eps . un
@@ -93,11 +98,11 @@ instance (Epsilon e) => Show (Fixed e) where
     showsPrec = showSigned showFixed
       where showFixed f@(F x) = showString $ show q ++ "." ++ decimals r e
               where q :: Integer
-	            (q, r) = properFraction (x + e/2)
-		    e = getEps f
-	    decimals a e | e >= 1 = ""
-	                 | otherwise = intToDigit b : decimals c (10 * e)
-	                      where (b, c) = properFraction (10 * a)
+                    (q, r) = properFraction (x + e/2)
+                    e = getEps f
+            decimals a e | e >= 1 = ""
+                         | otherwise = intToDigit b : decimals c (10 * e)
+                              where (b, c) = properFraction (10 * a)
 
 instance (Epsilon e) => Read (Fixed e) where
     readsPrec _ = readSigned readFixed
@@ -136,6 +141,13 @@ instance (Epsilon e) => RealFloat (Fixed e) where
     isDenormalized _ = False
     isNegativeZero _ = False
     isIEEE _ = False
+    -- Explicitly undefine these rather than omitting them; this
+    -- prevents a compiler warning at least.
+    floatRadix = undefined
+    floatDigits = undefined
+    floatRange = undefined
+    decodeFloat = undefined
+    encodeFloat = undefined
 
 -----------
 
@@ -143,4 +155,4 @@ instance (Epsilon e) => RealFloat (Fixed e) where
 dynamicEps :: forall a . Rational -> (forall e . Epsilon e => Fixed e -> a) -> Rational -> a
 dynamicEps r f v = loop (undefined :: Eps1)
   where loop :: forall x . (Epsilon x) => x -> a
-	loop e = if eps e <= r then f (fromRational v :: Fixed x) else loop (undefined :: EpsDiv10 x)
+        loop e = if eps e <= r then f (fromRational v :: Fixed x) else loop (undefined :: EpsDiv10 x)

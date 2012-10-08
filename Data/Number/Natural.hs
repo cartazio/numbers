@@ -62,10 +62,10 @@ instance Integral Natural where
     -- Not the most efficient version, but efficiency isn't the point of this module. :)
     quotRem x y =
         if x < y then
-	    (0, x)
+            (0, x)
         else
-	    let (q, r) = quotRem (x-y) y
-	    in  (1+q, r)
+            let (q, r) = quotRem (x-y) y
+            in  (1+q, r)
     div = quot
     mod = rem
     toInteger Z = 0

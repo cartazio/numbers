@@ -61,9 +61,9 @@ mkDif = D
 -- |The 'deriv' function is a simple utility to take the
 -- derivative of a (single argument) function.
 -- It is simply defined as
--- 
+--
 -- >  deriv f = val . df . f . dVar
--- 
+--
 deriv :: (Num a, Num b, Eq a, Eq b) => (Dif a -> Dif b) -> (a -> b)
 deriv f = val . df . f . dVar
 
@@ -118,7 +118,7 @@ instance (Num a, Eq a) => Num (Dif a) where
 instance (Fractional a, Eq a) => Fractional (Dif a) where
     recip (C x)    = C (recip x)
     recip (D x x') = ip
-	where ip = D (recip x) (-x' * ip * ip)
+        where ip = D (recip x) (-x' * ip * ip)
     fromRational r = C (fromRational r)
 
 lift :: (Num a, Eq a) => [a -> a] -> Dif a -> Dif a
@@ -177,3 +177,7 @@ instance (RealFloat a) => RealFloat (Dif a) where
     isDenormalized = isDenormalized . val
     isNegativeZero = isNegativeZero . val
     isIEEE = isIEEE . val
+    -- Set these to undefined rather than omit them to avoid compiler
+    -- warnings.
+    decodeFloat = undefined
+    encodeFloat = undefined
