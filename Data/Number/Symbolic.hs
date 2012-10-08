@@ -36,7 +36,7 @@ con = Con
 subst :: (Num a, Eq a) => String -> Sym a -> Sym a -> Sym a
 subst _ _ e@(Con _) = e
 subst x v e@(App x' _ []) | x == x' = v
-      	                  | otherwise = e
+                          | otherwise = e
 subst x v (App s f es) =
     case map (subst x v) es of
     [e] -> unOp (\ x -> f [x]) s e
@@ -56,10 +56,10 @@ instance (Show a) => Show (Sym a) where
         showParen (p>q) (showsPrec ql x . showString op . showsPrec qr y)
         where (ql, q, qr) = fromMaybe (9,9,9) $ lookup op [
                    ("**", (9,8,8)),
-		   ("/",  (7,7,8)),
-		   ("*",  (7,7,8)),
-		   ("+",  (6,6,7)),
-		   ("-",  (6,6,7))]
+                   ("/",  (7,7,8)),
+                   ("*",  (7,7,8)),
+                   ("+",  (6,6,7)),
+                   ("-",  (6,6,7))]
     showsPrec p (App "negate" _ [x]) =
         showParen (p>=6) (showString "-" . showsPrec 7 x)
     showsPrec p (App f _ xs) =

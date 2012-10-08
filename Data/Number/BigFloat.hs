@@ -33,7 +33,7 @@ instance (Epsilon e) => Show (BigFloat e) where
 instance (Epsilon e) => Num (BigFloat e) where
     BF m1 e1 + BF m2 e2  =  bf (m1' + m2') e
       where (m1', m2') = if e == e1 then (m1, m2 / base^(e-e2))
-      	    	       	      	    else (m1 / base^(e-e1), m2)
+                                           else (m1 / base^(e-e1), m2)
             e = e1 `max` e2
     -- Do - via negate
     BF m1 e1 * BF m2 e2  =  bf (m1 * m2) (e1 + e2)
@@ -68,8 +68,8 @@ bf m e | m == 0     = BF 0 0
 instance (Epsilon e) => RealFrac (BigFloat e) where
     properFraction x@(BF m e) =
         if e < 0 then (0, x)
-	         else let (i, f) = properFraction (m * base^^e)
-		      in  (i, bf f 0)
+                 else let (i, f) = properFraction (m * base^^e)
+                      in  (i, bf f 0)
 
 instance (Epsilon e) => Floating (BigFloat e) where
     pi = bf pi 0
@@ -96,7 +96,7 @@ instance (Epsilon e) => RealFloat (BigFloat e) where
     floatRange _ = (minBound, maxBound)
     decodeFloat x@(BF m e) =
         let d = floatDigits x
-	in  (round $ m * base^d, fromInteger e - d)
+        in  (round $ m * base^d, fromInteger e - d)
     encodeFloat m e = bf (fromInteger m) (toInteger e)
     exponent (BF _ e) = fromInteger e
     significand (BF m _) = BF m 0
@@ -108,7 +108,7 @@ instance (Epsilon e) => RealFloat (BigFloat e) where
     isIEEE _ = False
 
 toFloat1 :: (Epsilon e) => (Rational -> Rational -> Rational) ->
-	    BigFloat e -> BigFloat e
+             BigFloat e -> BigFloat e
 toFloat1 f x@(BF m e) =
     fromRational $ f (precision m * scl) (toRational m * scl)
       where scl = base^^e
