@@ -7,7 +7,6 @@ module Data.Number.Symbolic(Sym, var, con, subst, unSym) where
 
 import Data.Char(isAlpha)
 import Data.Maybe(fromMaybe)
-import Debug.Trace
 
 -- | Symbolic numbers over some base type for the literals.
 data Sym a = Con a | App String ([a]->a) [Sym a]
