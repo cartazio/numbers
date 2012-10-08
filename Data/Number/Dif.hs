@@ -177,3 +177,7 @@ instance (RealFloat a) => RealFloat (Dif a) where
     isDenormalized = isDenormalized . val
     isNegativeZero = isNegativeZero . val
     isIEEE = isIEEE . val
+    -- Set these to undefined rather than omit them to avoid compiler
+    -- warnings.
+    decodeFloat = undefined
+    encodeFloat = undefined
