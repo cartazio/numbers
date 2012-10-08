@@ -1,4 +1,8 @@
-{-# OPTIONS_GHC -fglasgow-exts -fscoped-type-variables #-}
+{-# LANGUAGE
+    GeneralizedNewtypeDeriving,
+    ScopedTypeVariables,
+    Rank2Types #-}
+
 -- | Numbers with a fixed number of decimals.
 module Data.Number.Fixed(
     Fixed,
