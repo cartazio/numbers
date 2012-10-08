@@ -23,7 +23,7 @@ base = 10
 -- but is more work.
 -- | Floating point number where the precision is determined by the type /e/.
 data BigFloat e = BF (Fixed e) Integer
-    deriving (Eq, Ord)
+    deriving (Eq)
 
 instance (Epsilon e) => Show (BigFloat e) where
     showsPrec = showSigned showBF
@@ -44,6 +44,9 @@ instance (Epsilon e) => Num (BigFloat e) where
 
 instance (Epsilon e) => Real (BigFloat e) where
     toRational (BF e m) = toRational e * base^^m
+
+instance (Epsilon e) => Ord (BigFloat e) where
+    compare x y = compare (toRational x) (toRational y)
 
 instance (Epsilon e) => Fractional (BigFloat e) where
     recip (BF m e) = bf (base / m) (-(e + 1))
@@ -114,8 +117,11 @@ toFloat1 f x@(BF m e) =
 
 -- * Quickcheck Properties
 
-prop_bigfloat_double_agree :: Double -> Bool
-prop_bigfloat_double_agree dbl =
+fromReal :: (RealFrac a, Fractional b) => a -> b
+fromReal = fromRational . toRational
+
+prop_bigfloat_double_agree_equality :: Double -> Bool
+prop_bigfloat_double_agree_equality dbl =
   dbl == bf'
   where
     -- Convert dbl to a BigFloat.
@@ -123,11 +129,24 @@ prop_bigfloat_double_agree dbl =
     -- And convert it back.
     bf' = fromReal bf :: Double
 
-    fromReal :: (RealFrac a, Fractional b) => a -> b
-    fromReal = fromRational . toRational
+
+prop_bigfloat_double_agree_ordering :: Double -> Double -> Bool
+prop_bigfloat_double_agree_ordering dbl1 dbl2 =
+  compare dbl1 dbl2 == compare bf1 bf2
+  where
+    -- Convert dbl1,dbl2 to BigFloat.
+    bf1 = fromReal dbl1 :: BigFloat Prec50
+    bf2 = fromReal dbl2 :: BigFloat Prec50
+
 
 bigfloat_properties :: Test.Framework.Test
 bigfloat_properties =
   testGroup "BigFloat Properties" [
-    testProperty "bigfloat/double agree " prop_bigfloat_double_agree
+    testProperty
+      "bigfloat/double agree (equality)"
+      prop_bigfloat_double_agree_equality,
+
+    testProperty
+      "bigfloat/double agree (ordering)"
+      prop_bigfloat_double_agree_ordering
   ]
