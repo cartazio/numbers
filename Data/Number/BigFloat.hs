@@ -11,7 +11,6 @@ module Data.Number.BigFloat(
 import Numeric(showSigned)
 import Test.Framework (Test, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
-import Test.QuickCheck (Arbitrary(..), Gen, Property, (==>))
 
 import Data.Number.Fixed
 import qualified Data.Number.FixedFunctions as F
@@ -122,12 +121,12 @@ fromReal = fromRational . toRational
 
 prop_bigfloat_double_agree_equality :: Double -> Bool
 prop_bigfloat_double_agree_equality dbl =
-  dbl == bf'
+  dbl == bf1
   where
     -- Convert dbl to a BigFloat.
-    bf = fromReal dbl :: BigFloat Prec50
+    bf1' = fromReal dbl :: BigFloat Prec50
     -- And convert it back.
-    bf' = fromReal bf :: Double
+    bf1 = fromReal bf1' :: Double
 
 
 prop_bigfloat_double_agree_ordering :: Double -> Double -> Bool
