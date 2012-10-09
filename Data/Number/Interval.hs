@@ -40,6 +40,6 @@ instance (Ord a, Num a) => Num (Interval a) where
  
 instance (Ord a, Fractional a) => Fractional (Interval a) where
     I l h / I l' h' | signum l' == signum h' && l' /= 0 =  I (minimum xs) (maximum xs)
-		    | otherwise = error "Interval: division by 0"
+                    | otherwise = error "Interval: division by 0"
                     where xs = [l/l', l/h', h/l', h/h']
     fromRational r   =  I l l where l = fromRational r

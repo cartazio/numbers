@@ -6,8 +6,11 @@
 module Data.Number.BigFloat(
     BigFloat,
     Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
+    bigfloat_properties
     ) where
 import Numeric(showSigned)
+import Test.Framework (Test, testGroup)
+import Test.Framework.Providers.QuickCheck2 (testProperty)
 
 import Data.Number.Fixed
 import qualified Data.Number.FixedFunctions as F
@@ -19,7 +22,7 @@ base = 10
 -- but is more work.
 -- | Floating point number where the precision is determined by the type /e/.
 data BigFloat e = BF (Fixed e) Integer
-    deriving (Eq, Ord)
+    deriving (Eq)
 
 instance (Epsilon e) => Show (BigFloat e) where
     showsPrec = showSigned showBF
@@ -29,7 +32,7 @@ instance (Epsilon e) => Show (BigFloat e) where
 instance (Epsilon e) => Num (BigFloat e) where
     BF m1 e1 + BF m2 e2  =  bf (m1' + m2') e
       where (m1', m2') = if e == e1 then (m1, m2 / base^(e-e2))
-      	    	       	      	    else (m1 / base^(e-e1), m2)
+                                           else (m1 / base^(e-e1), m2)
             e = e1 `max` e2
     -- Do - via negate
     BF m1 e1 * BF m2 e2  =  bf (m1 * m2) (e1 + e2)
@@ -41,11 +44,16 @@ instance (Epsilon e) => Num (BigFloat e) where
 instance (Epsilon e) => Real (BigFloat e) where
     toRational (BF e m) = toRational e * base^^m
 
+instance (Epsilon e) => Ord (BigFloat e) where
+    compare x y = compare (toRational x) (toRational y)
+
 instance (Epsilon e) => Fractional (BigFloat e) where
     recip (BF m e) = bf (base / m) (-(e + 1))
     -- Take care not to lose precision for small numbers
-    fromRational x = if abs x < 1 then recip $ bf (fromRational (recip x)) 0
-    		     	      	  else bf (fromRational x) 0
+    fromRational x
+      | x == 0 || abs x >= 1 = bf (fromRational x) 0
+      | otherwise = recip $ bf (fromRational (recip x)) 0
+
 
 -- normalizing constructor
 -- XXX The scaling is very inefficient
@@ -59,8 +67,8 @@ bf m e | m == 0     = BF 0 0
 instance (Epsilon e) => RealFrac (BigFloat e) where
     properFraction x@(BF m e) =
         if e < 0 then (0, x)
-	         else let (i, f) = properFraction (m * base^^e)
-		      in  (i, bf f 0)
+                 else let (i, f) = properFraction (m * base^^e)
+                      in  (i, bf f 0)
 
 instance (Epsilon e) => Floating (BigFloat e) where
     pi = bf pi 0
@@ -87,7 +95,7 @@ instance (Epsilon e) => RealFloat (BigFloat e) where
     floatRange _ = (minBound, maxBound)
     decodeFloat x@(BF m e) =
         let d = floatDigits x
-	in  (round $ m * base^d, fromInteger e - d)
+        in  (round $ m * base^d, fromInteger e - d)
     encodeFloat m e = bf (fromInteger m) (toInteger e)
     exponent (BF _ e) = fromInteger e
     significand (BF m _) = BF m 0
@@ -99,7 +107,45 @@ instance (Epsilon e) => RealFloat (BigFloat e) where
     isIEEE _ = False
 
 toFloat1 :: (Epsilon e) => (Rational -> Rational -> Rational) ->
-	    BigFloat e -> BigFloat e
+             BigFloat e -> BigFloat e
 toFloat1 f x@(BF m e) =
     fromRational $ f (precision m * scl) (toRational m * scl)
       where scl = base^^e
+
+
+
+-- * Quickcheck Properties
+
+fromReal :: (RealFrac a, Fractional b) => a -> b
+fromReal = fromRational . toRational
+
+prop_bigfloat_double_agree_equality :: Double -> Bool
+prop_bigfloat_double_agree_equality dbl =
+  dbl == bf1
+  where
+    -- Convert dbl to a BigFloat.
+    bf1' = fromReal dbl :: BigFloat Prec50
+    -- And convert it back.
+    bf1 = fromReal bf1' :: Double
+
+
+prop_bigfloat_double_agree_ordering :: Double -> Double -> Bool
+prop_bigfloat_double_agree_ordering dbl1 dbl2 =
+  compare dbl1 dbl2 == compare bf1 bf2
+  where
+    -- Convert dbl1,dbl2 to BigFloat.
+    bf1 = fromReal dbl1 :: BigFloat Prec50
+    bf2 = fromReal dbl2 :: BigFloat Prec50
+
+
+bigfloat_properties :: Test.Framework.Test
+bigfloat_properties =
+  testGroup "BigFloat Properties" [
+    testProperty
+      "bigfloat/double agree (equality)"
+      prop_bigfloat_double_agree_equality,
+
+    testProperty
+      "bigfloat/double agree (ordering)"
+      prop_bigfloat_double_agree_ordering
+  ]

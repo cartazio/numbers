@@ -1,4 +1,6 @@
-{-# OPTIONS_GHC -fglasgow-exts #-}
+{-# LANGUAGE
+    FunctionalDependencies,
+    MultiParamTypeClasses #-}
 module Data.Number.Vectorspace(Vectorspace(..)) where
 
 -- |Class of vector spaces /v/ with scalar /s/.
