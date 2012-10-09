@@ -28,25 +28,25 @@ source-repository this
 
 Library
   Build-Depends:
-    base >= 3 && < 5,
-    -- Additional test dependencies.
-    QuickCheck                  == 2.*,
-    test-framework              == 0.6.*,
-    test-framework-quickcheck2  == 0.2.*
+    base >= 3 && < 5
 
   Exposed-modules:
     Data.Number.Symbolic Data.Number.Dif
     Data.Number.CReal Data.Number.Fixed
     Data.Number.Interval Data.Number.BigFloat
     Data.Number.Natural
-  Other-modules:    Data.Number.Vectorspace Data.Number.FixedFunctions
+  Other-modules:
+    Data.Number.Vectorspace
+    Data.Number.FixedFunctions
 
   Ghc-Options:
-    -fwarn-missing-signatures
-    -fwarn-orphans
-    -fwarn-tabs
-    -fwarn-incomplete-record-updates
-    -fwarn-monomorphism-restriction
+    -Wall
+    -fno-warn-name-shadowing
+    -fno-warn-unused-binds
+    -fno-warn-unused-matches
+    -fno-warn-incomplete-patterns
+    -fno-warn-overlapping-patterns
+    -fno-warn-type-defaults
 
 test-suite testsuite
   type: exitcode-stdio-1.0

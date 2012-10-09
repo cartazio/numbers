@@ -5,13 +5,10 @@
 -- The numbers are stored in base 10.
 module Data.Number.BigFloat(
     BigFloat,
-    Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
-    bigfloat_properties
+    Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20
     ) where
-import Numeric(showSigned)
-import Test.Framework (Test, testGroup)
-import Test.Framework.Providers.QuickCheck2 (testProperty)
 
+import Numeric(showSigned)
 import Data.Number.Fixed
 import qualified Data.Number.FixedFunctions as F
 
@@ -111,41 +108,3 @@ toFloat1 :: (Epsilon e) => (Rational -> Rational -> Rational) ->
 toFloat1 f x@(BF m e) =
     fromRational $ f (precision m * scl) (toRational m * scl)
       where scl = base^^e
-
-
-
--- * Quickcheck Properties
-
-fromReal :: (RealFrac a, Fractional b) => a -> b
-fromReal = fromRational . toRational
-
-prop_bigfloat_double_agree_equality :: Double -> Bool
-prop_bigfloat_double_agree_equality dbl =
-  dbl == bf1
-  where
-    -- Convert dbl to a BigFloat.
-    bf1' = fromReal dbl :: BigFloat Prec50
-    -- And convert it back.
-    bf1 = fromReal bf1' :: Double
-
-
-prop_bigfloat_double_agree_ordering :: Double -> Double -> Bool
-prop_bigfloat_double_agree_ordering dbl1 dbl2 =
-  compare dbl1 dbl2 == compare bf1 bf2
-  where
-    -- Convert dbl1,dbl2 to BigFloat.
-    bf1 = fromReal dbl1 :: BigFloat Prec50
-    bf2 = fromReal dbl2 :: BigFloat Prec50
-
-
-bigfloat_properties :: Test.Framework.Test
-bigfloat_properties =
-  testGroup "BigFloat Properties" [
-    testProperty
-      "bigfloat/double agree (equality)"
-      prop_bigfloat_double_agree_equality,
-
-    testProperty
-      "bigfloat/double agree (ordering)"
-      prop_bigfloat_double_agree_ordering
-  ]

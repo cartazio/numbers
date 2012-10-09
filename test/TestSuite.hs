@@ -6,7 +6,7 @@ import Test.Framework (
   defaultMain,
   )
 
-import Data.Number.BigFloat (bigfloat_properties)
+import Test.Data.Number.BigFloat (bigfloat_properties)
 
 main :: IO ()
 main = defaultMain tests
