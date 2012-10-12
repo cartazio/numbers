@@ -58,3 +58,6 @@ test-suite testsuite
     QuickCheck                  == 2.*,
     test-framework              == 0.6.*,
     test-framework-quickcheck2  == 0.2.*
+
+  other-modules:
+    Test.Data.Number.BigFloat
