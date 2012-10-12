@@ -1,5 +1,5 @@
 Name:           numbers
-Version:        3000.1.0.0
+Version:        3000.1.0.1
 License:        BSD3
 License-file:   LICENSE
 Author:         Lennart Augustsson
@@ -50,7 +50,6 @@ Library
 
 test-suite testsuite
   type: exitcode-stdio-1.0
-  hs-source-dirs: . test
   main-is: TestSuite.hs
   build-depends:
     base                        >= 3 && < 5,
