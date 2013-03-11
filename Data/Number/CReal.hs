@@ -177,7 +177,7 @@ instance RealFrac CReal where
   properFraction x@(CR x') = (fromInteger n, x - fromInteger n) where n = x' 0
 
 instance RealFloat CReal where
-  floatRadix _ = error "CCeal.floatRadix"
+  floatRadix _ = error "CReal.floatRadix"
   floatDigits _ = error "CReal.floatDigits"
   floatRange _ = error "CReal.floatRange"
   decodeFloat _ = error "CReal.decodeFloat"
