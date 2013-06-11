@@ -97,7 +97,7 @@ instance Floating CReal where
                   xp1 = x+1; xm1 = x-1
   asin x  = if x0 >  0 then pi / 2 - atan (s/x) else
             if x0 == 0 then atan (x/s)                      else
-            {- x0 <  0 -}   atan (s/x) - pi / 2
+            {- x0 <  0 -}   - atan (s/x) - pi / 2
             where (CR x') = x; x0 = x' 0; s = sqrt (1 - x*x)
   acos x  = pi / 2 - asin x
   sinh x  = (y - recip y) / 2 where y = exp x
