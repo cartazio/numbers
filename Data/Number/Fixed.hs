@@ -8,7 +8,7 @@
 module Data.Number.Fixed(
     Fixed,
     Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
-    convertFixed, dynamicEps, precision) where
+    convertFixed, dynamicEps, precision, with_added_precision) where
 import Numeric
 import Data.Char
 import Data.Ratio
@@ -111,7 +111,8 @@ instance (Epsilon e) => Read (Fixed e) where
 instance (Epsilon e) => Floating (Fixed e) where
     pi = toFixed0 F.pi
     sqrt = toFixed1 F.sqrt
-    exp = toFixed1 F.exp
+    exp x = with_added_precision r (convertFixed . (toFixed1 F.exp)) x where
+      r = if x < 0 then 1 else 0.1 ^ (ceiling (x * 0.45))
     log = toFixed1 F.log
     sin = toFixed1 F.sin
     cos = toFixed1 F.cos
@@ -156,3 +157,9 @@ dynamicEps :: forall a . Rational -> (forall e . Epsilon e => Fixed e -> a) -> R
 dynamicEps r f v = loop (undefined :: Eps1)
   where loop :: forall x . (Epsilon x) => x -> a
         loop e = if eps e <= r then f (fromRational v :: Fixed x) else loop (undefined :: EpsDiv10 x)
+
+-- | The call @with_added_precision r f v@ evaluates @f v@, while
+-- temporarily multiplying the precision of /v/ by /r/.
+with_added_precision :: forall a f.(Epsilon f) => Rational -> (forall e.(Epsilon e) => Fixed e -> a) -> Fixed f -> a
+with_added_precision r f v = dynamicEps (p*r) f (toRational v) where
+  p = precision v
