@@ -1,6 +1,6 @@
 Name:           numbers
 -- don't forget to bump the "this" source tag
-Version:        3000.1.0.3
+Version:        3000.2.0.0
 License:        BSD3
 License-file:   LICENSE
 Author:         Lennart Augustsson
@@ -27,7 +27,7 @@ source-repository head
 source-repository this
   type:     git
   location: git://github.com/DanBurton/numbers.git
-  tag:      numbers-3000.1.0.3
+  tag:      numbers-3000.2.0.0
 
 Library
   Build-Depends:
@@ -38,7 +38,6 @@ Library
     Data.Number.CReal Data.Number.Fixed
     Data.Number.Interval Data.Number.BigFloat
     Data.Number.Natural
-  Other-modules:
     Data.Number.Vectorspace
     Data.Number.FixedFunctions
 
