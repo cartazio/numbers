@@ -1,14 +1,21 @@
 -- | An incomplete implementation of interval aritrhmetic.
-module Data.Number.Interval(Interval, ival, getIval) where
+module Data.Number.Interval(Interval, ival, ival', getIval) where
 
-data Interval a = I a a
+data Interval a = I !a !a
 
 ival :: (Ord a) => a -> a -> Interval a
 ival l h | l <= h = I l h
          | otherwise = error "Interval.ival: low > high"
 
+ival' :: (Ord a) => a -> a -> Interval a
+ival' x y | x <= y = I x y
+          | otherwise = I x y
+
 getIval :: Interval a -> (a, a)
 getIval (I l h) = (l, h)
+
+ispan :: (Num a) => Interval a -> a
+ispan (I l h) = h - l
 
 instance (Ord a) => Eq (Interval a) where
     I l h == I l' h'  =  l == h' && h == l'
@@ -24,9 +31,17 @@ instance (Ord a) => Ord (Interval a) where
     max _ _ = error "Interval max"
     min _ _ = error "Interval min"
 
-instance (Eq a, Show a) => Show (Interval a) where
-    showsPrec p (I l h) | l == h = showsPrec p l
-                        | otherwise = showsPrec p l . showString ".." . showsPrec p h
+instance (Show a) => Show (Interval a) where
+    showsPrec p (I l h) = showParen (p >= 11) $ showString "ival "
+                                              . showsPrec 11 l
+                                              . showsPrec 11 h
+
+instance (Read a) => Read (Interval a) where
+    readsPrec p = readParen (p >= 11) (\s0 -> [ (I l h , s3)
+                                              | ("ival", s0) <- lex          s
+                                              , (  l   , s1) <- readsPrec 11 s1
+                                              , (    h , s3) <- readsPrec 11 s2
+                                              ])
 
 instance (Ord a, Num a) => Num (Interval a) where
     I l h + I l' h'  =  I (l + l') (h + h')
@@ -43,3 +58,7 @@ instance (Ord a, Fractional a) => Fractional (Interval a) where
                     | otherwise = error "Interval: division by 0"
                     where xs = [l/l', l/h', h/l', h/h']
     fromRational r   =  I l l where l = fromRational r
+
+instance (Bounded a) => Bounded (Interval a) where
+    minBound = I minBound minBound
+    maxBound = I maxBound maxBound
