@@ -13,7 +13,7 @@ Description:
   arbitrary precision fixed numbers,
   arbitrary precision floating point numbers,
   differentiable numbers, symbolic numbers,
-  natural numbers, interval arithmetic.
+  (unary) natural numbers, and interval arithmetic.
 Build-type:	    Simple
 
 cabal-version:  >= 1.8
@@ -31,7 +31,8 @@ source-repository this
 
 Library
   Build-Depends:
-    base >= 3 && < 5
+    base >= 3 && < 5,
+    logfloat
 
   Exposed-modules:
     Data.Number.Symbolic Data.Number.Dif
