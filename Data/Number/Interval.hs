@@ -77,7 +77,7 @@ newtype IntervalNesting a = Nesting { getNesting :: Interval a } deriving (Eq, S
 -- this instance implements a partial order based on nesting,
 -- which should agree with the natural order on ispan where
 -- applicable
-instance (Ord a) => PartialOrd (IntervalNesting a)
+instance (Ord a) => PartialOrd (IntervalNesting a) where
     cmp (Nesting (I l h)) (Nesting (I l' h')) = case (compare l l', compare h h') of
                                                      (EQ          , EQ          ) -> Just EQ
                                                      (GT          , EQ          ) -> Just LT
