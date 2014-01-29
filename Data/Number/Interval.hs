@@ -1,5 +1,7 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 -- | An incomplete implementation of interval aritrhmetic.
-module Data.Number.Interval(Interval, ival, ival', ispan, getIval) where
+module Data.Number.Interval(Interval, ival, ival', ispan, getIval, IntervalNesting(..),
+                            module Data.Number.PartialOrd) where
 import Data.Number.PartialOrd
 
 data Interval a = I a a
@@ -65,7 +67,24 @@ instance (Ord a, Fractional a) => Fractional (Interval a) where
 
 -- this definition ensures that all intervals of a bounded type
 -- are "between" minBound and maxBound according to the
--- PartialOrd instance
+-- (default) PartialOrd instance
 instance (Bounded a) => Bounded (Interval a) where
     minBound = I minBound minBound
     maxBound = I maxBound maxBound
+
+newtype IntervalNesting a = Nesting { getNesting :: Interval a } deriving (Eq, Show, Read, Num, Fractional)
+
+-- this instance implements a partial order based on nesting,
+-- which should agree with the natural order on ispan where
+-- applicable
+instance (Ord a) => PartialOrd (IntervalNesting a)
+    cmp (Nesting (I l h)) (Nesting (I l' h')) = case (compare l l', compare h h') of
+                                                     (EQ          , EQ          ) -> Just EQ
+                                                     (GT          , EQ          ) -> Just LT
+                                                     (LT          , EQ          ) -> Just GT
+                                                     (EQ          , GT          ) -> Just LT
+                                                     (GT          , GT          ) -> Nothing
+                                                     (LT          , GT          ) -> Just LT
+                                                     (EQ          , LT          ) -> Just GT
+                                                     (GT          , LT          ) -> Just GT
+                                                     (LT          , LT          ) -> Nothing
