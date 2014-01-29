@@ -9,7 +9,7 @@ ival l h | l <= h = I l h
 
 ival' :: (Ord a) => a -> a -> Interval a
 ival' x y | x <= y = I x y
-          | otherwise = I x y
+          | otherwise = I y x
 
 getIval :: Interval a -> (a, a)
 getIval (I l h) = (l, h)
