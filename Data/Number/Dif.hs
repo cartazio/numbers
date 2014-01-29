@@ -176,6 +176,6 @@ instance (RealFloat a) => RealFloat (Dif a) where
     isDenormalized = isDenormalized . val
     isNegativeZero = isNegativeZero . val
     isIEEE = isIEEE . val
-    decodeFloat p@(D _ _) = error "cannot faithfully represent an arbitrary derivative as a decoded float"
+    decodeFloat (D _ _) = error "cannot faithfully represent an arbitrary derivative as a decoded float"
     decodeFloat (C x) = decodeFloat x
     encodeFloat = (C .) . encodeFloat
