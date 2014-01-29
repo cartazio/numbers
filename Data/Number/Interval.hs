@@ -39,8 +39,8 @@ instance (Show a) => Show (Interval a) where
 instance (Read a) => Read (Interval a) where
     readsPrec p = readParen (p >= 11) (\s0 -> [ (I l h , s3)
                                               | ("ival", s0) <- lex          s
-                                              , (  l   , s1) <- readsPrec 11 s1
-                                              , (    h , s3) <- readsPrec 11 s2
+                                              , (  l   , s1) <- readsPrec 11 s0
+                                              , (    h , s2) <- readsPrec 11 s1
                                               ])
 
 instance (Ord a, Num a) => Num (Interval a) where
