@@ -1,5 +1,5 @@
 -- | An incomplete implementation of interval aritrhmetic.
-module Data.Number.Interval(Interval, ival, ival', getIval) where
+module Data.Number.Interval(Interval, ival, ival', ispan, getIval) where
 
 data Interval a = I !a !a
 
