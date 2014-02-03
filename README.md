@@ -12,13 +12,13 @@ but I am willing (for now) to provide
 this repository to facilitate its maintenance.
 
 [edit] Okay maybe I am the maintainer now.
-I've put my email in the maintianer slot.
+I've put my email in the maintainer slot.
 
 <hr />
 
 danburton.email@gmail.com
 
-(c) 2012-2013 Dan Burton
+(c) 2012-2014 Dan Burton
 
 Any modifications I have made to BSD3-licensed code
 in this repository,
