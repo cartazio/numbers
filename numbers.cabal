@@ -1,10 +1,10 @@
 Name:           numbers
 -- don't forget to bump the "this" source tag
-Version:        3000.2.0.0
+Version:        3000.2.0.1
 License:        BSD3
 License-file:   LICENSE
 Author:         Lennart Augustsson
-Maintainer:     danburton.email@gmail.com
+Maintainer:     johnw@fpcomplete.com
 Category:       Data, Math
 Synopsis:       Various number types
 Description:
@@ -18,16 +18,16 @@ Build-type:	    Simple
 
 cabal-version:  >= 1.8
 
-homepage:     https://github.com/DanBurton/numbers#readme
-bug-reports:  https://github.com/DanBurton/numbers/issues
+homepage:     https://github.com/jwiegley/numbers#readme
+bug-reports:  https://github.com/jwiegley/numbers/issues
 
 source-repository head
   type:     git
-  location: git://github.com/DanBurton/numbers.git
+  location: git://github.com/jwiegley/numbers.git
 source-repository this
   type:     git
-  location: git://github.com/DanBurton/numbers.git
-  tag:      numbers-3000.2.0.0
+  location: git://github.com/jwiegley/numbers.git
+  tag:      numbers-3000.2.0.1
 
 Library
   Build-Depends:

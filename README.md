@@ -14,6 +14,9 @@ this repository to facilitate its maintenance.
 [edit] Okay maybe I am the maintainer now.
 I've put my email in the maintainer slot.
 
+[edit] As of 2014/02/03, John Wiegley is now
+the maintainer.
+
 <hr />
 
 danburton.email@gmail.com
