@@ -83,6 +83,10 @@ binOp f (Con x) _ (Con y) = Con (f x y)
 binOp _ x "+" 0 = x
 binOp _ 0 "+" x = x
 binOp _ x "+" (App "+" _ [y, z]) = (x + y) + z
+binOp _ x "+" y | x == y = 2 * x
+binOp _ (App "*" _ [f,x]) "+" y | x == y = (f + 1) * y
+binOp _ y "+" (App "*" _ [f,x]) | x == y = (f + 1) * y
+binOp _ (App "*" _ [f1,x]) "+" (App "*" _ [f2,y]) | x == y = (f1 + f2) * x
 binOp _ x "+" y | isCon y && not (isCon x) = y + x
 binOp _ x "+" (App "negate" _ [y]) = x - y
 binOp _ x "-" 0 = x
