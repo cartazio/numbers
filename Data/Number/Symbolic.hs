@@ -122,9 +122,11 @@ isCon :: Sym a -> Bool
 isCon (Con _) = True
 isCon _ = False
 
+addena :: Sym t -> [Sym t]
 addena (App "+" _ [a,b]) = addena a ++ addena b
 addena a = [a]
 
+sum' :: (Eq a, Num a) => [Sym a] -> Sym a
 sum' [a] = a
 sum' a = foldl1 (\x y -> binOp (+) x "+" y) $ gather $
  sortBy (compare `on` (not . isCon)) a where
