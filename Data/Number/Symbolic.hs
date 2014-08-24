@@ -7,6 +7,8 @@ module Data.Number.Symbolic(Sym, var, con, subst, unSym) where
 
 import Data.Char(isAlpha)
 import Data.Maybe(fromMaybe)
+import Data.List(sortBy)
+import Data.Function(on)
 
 -- | Symbolic numbers over some base type for the literals.
 data Sym a = Con a | App String ([a]->a) [Sym a]
@@ -65,7 +67,7 @@ instance (Show a) => Show (Sym a) where
         showParen (p>10) (foldl (.) (showString f) (map (\ x -> showChar ' ' . showsPrec 11 x) xs))
 
 instance (Num a, Eq a) => Num (Sym a) where
-    x + y         = binOp (+) x "+" y
+    x + y         = sum' $ concatMap addena [x,y]
     x - y         = binOp (-) x "-" y
     x * y         = binOp (*) x "*" y
     negate x      = unOp negate "negate" x
@@ -82,12 +84,7 @@ binOp :: (Num a, Eq a) => (a->a->a) -> Sym a -> String -> Sym a -> Sym a
 binOp f (Con x) _ (Con y) = Con (f x y)
 binOp _ x "+" 0 = x
 binOp _ 0 "+" x = x
-binOp _ x "+" (App "+" _ [y, z]) = (x + y) + z
-binOp _ x "+" y | x == y = 2 * x
-binOp _ (App "*" _ [f,x]) "+" y | x == y = (f + 1) * y
-binOp _ y "+" (App "*" _ [f,x]) | x == y = (f + 1) * y
-binOp _ (App "*" _ [f1,x]) "+" (App "*" _ [f2,y]) | x == y = (f1 + f2) * x
-binOp _ x "+" y | isCon y && not (isCon x) = y + x
+binOp _ x "+" y | isCon y && not (isCon x) = binOp (+) y "+" x
 binOp _ x "+" (App "negate" _ [y]) = x - y
 binOp _ x "-" 0 = x
 binOp _ x "-" x' | x == x' = 0
@@ -125,6 +122,29 @@ isCon :: Sym a -> Bool
 isCon (Con _) = True
 isCon _ = False
 
+addena (App "+" _ [a,b]) = addena a ++ addena b
+addena a = [a]
+
+sum' [a] = a
+sum' a = foldl1 (\x y -> binOp (+) x "+" y) $ gather $
+ sortBy (compare `on` (not . isCon)) a where
+  gather [] = []
+  gather [t] = [t]
+  gather (t1:n) = let
+    (c,r) = gn t1 n
+    in c : gather r
+  gn t [] = (t,[])
+  gn t1 (t2:r) = let
+    (c,s) = g1 t1 t2
+    (cs,rr) = gn c r
+    in (cs, s ++ rr)
+  g1 t1 t2 = case (t1,t2) of
+    (App "*" _ [f1,x1], App "*" _ [f2,x2]) | x1 == x2 -> ((f1 + f2) * x1, [])
+    (App "*" _ [f,x1], x2) | x1 == x2 -> ((f + 1) * x1, [])
+    (x1, App "*" _ [f,x2]) | x1 == x2 -> ((f + 1) * x1, [])
+    (x1,x2) | x1 == x2 -> (2 * x1, [])
+    (Con x, Con y) -> (Con (x + y), [])
+    _ -> (t1, [t2])
 
 instance (Integral a) => Integral (Sym a) where
     quot x y = binOp quot x "quot" y
