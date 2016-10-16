@@ -40,6 +40,7 @@ Library
     Data.Number.Natural
     Data.Number.Vectorspace
     Data.Number.FixedFunctions
+    Data.Number.Abstract
 
   Ghc-Options:
     -Wall
