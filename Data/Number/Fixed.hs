@@ -7,7 +7,7 @@
 -- | Numbers with a fixed number of decimals.
 module Data.Number.Fixed(
     Fixed,
-    Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
+    Epsilon(eps), Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
     convertFixed, dynamicEps, precision, with_added_precision) where
 import Numeric
 import Data.Char
