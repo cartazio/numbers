@@ -1,6 +1,6 @@
 -- | Symbolic number, i.e., these are not numbers at all, but just build
 -- a representation of the expressions.
--- This implementation is incomplete in that it allows comnstruction,
+-- This implementation is incomplete in that it allows construction,
 -- but not deconstruction of the expressions.  It's mainly useful for
 -- debugging.
 module Data.Number.Symbolic(Sym, var, con, subst, unSym) where
