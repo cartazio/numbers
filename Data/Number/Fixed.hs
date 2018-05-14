@@ -8,7 +8,7 @@
 module Data.Number.Fixed(
     Fixed,
     Epsilon, Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
-    convertFixed, dynamicEps, precision, with_added_precision) where
+    Prec500, convertFixed, dynamicEps, precision, with_added_precision) where
 import Numeric
 import Data.Char
 import Data.Ratio
