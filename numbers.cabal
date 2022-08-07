@@ -1,6 +1,6 @@
 Name:           numbers
 -- don't forget to bump the "this" source tag
-Version:        3000.2.0.1
+Version:        3000.2.0.2
 License:        BSD3
 License-file:   LICENSE
 Author:         Lennart Augustsson
@@ -27,7 +27,7 @@ source-repository head
 source-repository this
   type:     git
   location: git://github.com/jwiegley/numbers.git
-  tag:      numbers-3000.2.0.1
+  tag:      numbers-3000.2.0.2
 
 Library
   Build-Depends:

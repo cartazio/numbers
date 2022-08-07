@@ -8,7 +8,7 @@
 module Data.Number.Fixed(
     Fixed,
     Epsilon(eps), Eps1, EpsDiv10, Prec10, Prec50, PrecPlus20,
-    convertFixed, dynamicEps, precision, with_added_precision) where
+    Prec500, convertFixed, dynamicEps, precision, with_added_precision) where
 import Numeric
 import Data.Char
 import Data.Ratio
@@ -152,7 +152,7 @@ instance (Epsilon e) => RealFloat (Fixed e) where
 
 -----------
 
--- The call @dynmicEps r f v@ evaluates @f v@ to a precsion of @r@.
+-- | The call @dynmicEps r f v@ evaluates @f v@ to a precsion of @r@.
 dynamicEps :: forall a . Rational -> (forall e . Epsilon e => Fixed e -> a) -> Rational -> a
 dynamicEps r f v = loop (undefined :: Eps1)
   where loop :: forall x . (Epsilon x) => x -> a
